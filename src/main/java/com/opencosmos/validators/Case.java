@@ -13,7 +13,7 @@ public class Case {
 	public Case parent = null;
 	public Class<?> type = null;
 	public Object value = null;
-	public List<String> path = new ArrayList<>();
+	public String path = "";
 	public ValueOrigin origin = ValueOrigin.ROOT;
 	public String member = null;
 	public int index = -1;
@@ -30,7 +30,7 @@ public class Case {
 		this.root = root;
 		this.value = root;
 		this.type = type;
-		this.path.add(name);
+		this.path = name;
 	}
 
 	private Case fork(ValueOrigin origin) {
@@ -38,7 +38,7 @@ public class Case {
 		cloned.root = this.root;
 		cloned.parent = this;
 		cloned.value = this.value;
-		cloned.path.addAll(this.path);
+		cloned.path = this.path;
 		cloned.origin = origin;
 		return cloned;
 	}
@@ -48,7 +48,7 @@ public class Case {
 		cloned.index = index;
 		cloned.value = value;
 		cloned.type = type;
-		cloned.path.add("[" + Integer.toString(index) + "]");
+		cloned.path += "[" + Integer.toString(index) + "]";
 		return cloned;
 	}
 
@@ -57,7 +57,7 @@ public class Case {
 		cloned.member = member;
 		cloned.value = value;
 		cloned.type = type;
-		cloned.path.add("." + member);
+		cloned.path += "." + member;
 		return cloned;
 	}
 	

@@ -1,4 +1,4 @@
-package com.opencosmos.validators.test;
+package com.opencosmos.validators;
 
 import org.junit.Test;
 
