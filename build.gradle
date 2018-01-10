@@ -1,0 +1,41 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'eclipse'
+
+group = 'com.opencosmos.validators'
+version = '0.0'
+
+description = """"""
+
+sourceCompatibility = 8
+targetCompatibility = 8
+
+tasks.withType(JavaCompile) {
+	options.encoding = 'UTF-8'
+}
+
+repositories {
+	maven { url "http://repo.maven.apache.org/maven2" }
+}
+
+dependencies {
+	testCompile 'junit:junit:4.12'
+}
+
+task buildJar(type: Jar) {
+	manifest {
+		attributes 'Implementation-Title': 'Slow Validator',
+			   'Implementation-Version': version
+	}
+	baseName = project.name + '-bundle'
+		from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+	with jar
+}
+
+sourceSets {
+	main {
+		java {
+			srcDir "src/main/java"
+		}
+	}
+}
