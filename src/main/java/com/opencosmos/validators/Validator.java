@@ -9,6 +9,9 @@ public class Validator {
 	
 	private final List<Assertion> assertions = new ArrayList<>();
 	private final List<Case> result = new ArrayList<>();
+	
+	public boolean disabled = false;
+	public static boolean global_disable = false;
 
 	public Validator(Assertion... assertions) {
 		for (Assertion assertion : assertions) {
@@ -27,6 +30,10 @@ public class Validator {
 			}
 			result.add(case_.fail(msg));
 		}
+	}
+	
+	public void clear_result() {
+		result.clear();
 	}
 
 	public Validator test(String name, Object subject) {
@@ -63,6 +70,9 @@ public class Validator {
 	}
 	
 	private void validate_recursor(Case case_) {
+		if (disabled || global_disable) {
+			return;
+		}
 		final Object subject = case_.value;
 		final Class<?> type = case_.type;
 		if (type.isPrimitive()) {

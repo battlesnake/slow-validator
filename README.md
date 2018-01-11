@@ -34,6 +34,21 @@ each error:
  * the error string returned by the validator.
 
 
+# Enable/disable
+
+Individual `Validator` instances can be enabled/disabled:
+
+	some_validator.disabled = true;
+
+Validators can also be globally disabled:
+
+	Validator.global_disable = true;
+	
+This does not disable the null-checks in the type-less test/validate functions, but does disable any further validation.
+
+This way, you can leave validators in your code, and globally disable them for the majority of the time that you don't need them to aid in debugging.
+
+
 # How do I use this
 
 	public class MyClass {
