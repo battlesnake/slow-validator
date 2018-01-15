@@ -5,10 +5,10 @@ This implements a reflection-based recursive validator.
 It walks over all public fields of the given object.  When encountering an
 array or another object, it recurses into them.
 
-Each value is passed to a set of validator functions, along with the context
+Each value is passed to a set of assertion functions, along with the context
 and the field type.
 
-The validators return `null` on success and an error string on invalid value.
+The assertions return `null` on success and an error string on invalid value.
 
 
 # When should I use this?
@@ -33,6 +33,9 @@ each error:
 
  * the error string returned by the validator.
 
+The exception object itself has a property which contains structured data
+describing every error found.
+This is a list of `Case` objects, the format of which are described below.
 
 # Enable/disable
 
