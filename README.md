@@ -43,7 +43,7 @@ Individual `Validator` instances can be enabled/disabled:
 Validators can also be globally disabled:
 
 	Validator.global_disable = true;
-	
+
 This does not disable the null-checks in the type-less test/validate functions, but does disable any further validation.
 
 This way, you can leave validators in your code, and globally disable them for the majority of the time that you don't need them to aid in debugging.
@@ -121,6 +121,8 @@ It has the following members:
  * `root`: The object passed to the validator.
 
  * `parent`: The parent case.  `parent.value` is the object/array for which a field failed validation, or is `null` if the root object failed validation.
+
+ * `type_class`: Whether the field type is PRIMITIVE, ENUM, OBJECT, or ARRAY.
 
  * `type`: The type of the field (or the type passed to `test`/`validate` for the root object).
 
