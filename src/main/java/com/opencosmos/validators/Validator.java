@@ -6,10 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Validator {
-	
-	private final List<Assertion> assertions = new ArrayList<>();
-	private final List<Case> result = new ArrayList<>();
-	
+
+	public final List<Assertion> assertions = new ArrayList<>();
+	public final List<Case> result = new ArrayList<>();
+
 	public boolean disabled = false;
 	public static boolean global_disable = false;
 
@@ -19,11 +19,8 @@ public class Validator {
 		}
 	}
 
-	private void test_assertions(Case case_, int type) {
+	private void test_assertions(Case case_) {
 		for (Assertion assertion : assertions) {
-			if ((assertion.getTypes() & type) == 0) {
-				continue;
-			}
 			String msg = assertion.test(case_);
 			if (msg == null) {
 				continue;
@@ -31,18 +28,19 @@ public class Validator {
 			result.add(case_.fail(msg));
 		}
 	}
-	
+
 	public void clear_result() {
 		result.clear();
 	}
 
 	public Validator test(String name, Object subject) {
 		if (subject == null) {
-			throw new ValidationFailedException("Attempted to validate null value without providing type information", null);
+			throw new ValidationFailedException("Attempted to validate null value without providing type information",
+					null);
 		}
 		return test(name, subject, subject.getClass());
 	}
-	
+
 	public Validator test(String name, Object subject, Class<?> type) {
 		validate_recursor(new Case(name, subject, type));
 		return this;
@@ -52,12 +50,12 @@ public class Validator {
 		test(name, subject);
 		validate();
 	}
-	
+
 	public void validate(String name, Object subject, Class<?> type) {
 		test(name, subject, type);
 		validate();
 	}
-	
+
 	public void validate() {
 		if (result.isEmpty()) {
 			return;
@@ -68,41 +66,40 @@ public class Validator {
 		}
 		throw new ValidationFailedException(sb.toString(), result);
 	}
-	
+
 	private void validate_recursor(Case case_) {
 		if (disabled || global_disable) {
 			return;
 		}
-		final Object subject = case_.value;
-		final Class<?> type = case_.type;
-		if (type.isPrimitive()) {
-			test_assertions(case_, Assertion.TYPE_PRIMITIVE);
-		} else if (type.isEnum()) {
-			test_assertions(case_, Assertion.TYPE_ENUM);
-		} else if (type.isArray()) {
-			test_assertions(case_, Assertion.TYPE_ARRAY);
-			if (subject == null) {
-				return;
-			}
-			final int length = Array.getLength(subject);
+		test_assertions(case_);
+		if (case_.value == null) {
+			return;
+		}
+		switch (case_.type_class) {
+		case ARRAY:
+			final int length = Array.getLength(case_.value);
 			for (int i = 0; i < length; i++) {
-				validate_recursor(case_.fork(i, Array.get(subject, i), type.getComponentType()));
+				validate_recursor(case_.fork(i, Array.get(case_.value, i), case_.type.getComponentType()));
 			}
-		} else {
-			test_assertions(case_, Assertion.TYPE_OBJECT);
-			if (subject == null) {
-				return;
-			}
-			for (final Field field : type.getFields()) {
+			break;
+		case OBJECT:
+			for (final Field field : case_.type.getFields()) {
 				Object value;
 				try {
-					value = field.get(subject);
+					value = field.get(case_.value);
 				} catch (IllegalArgumentException | IllegalAccessException e) {
 					/* Eat */
 					continue;
 				}
 				validate_recursor(case_.fork(field.getName(), value, field.getType()));
 			}
+			break;
+		case ENUM:
+			break;
+		case PRIMITIVE:
+			break;
+		default:
+			break;
 		}
 	}
 

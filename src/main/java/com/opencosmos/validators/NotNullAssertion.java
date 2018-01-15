@@ -10,8 +10,4 @@ public class NotNullAssertion implements Assertion {
 			}
 		}
 
-		public int getTypes() {
-			return Assertion.TYPE_ALL;
-		}
-
 }
