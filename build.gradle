@@ -2,8 +2,8 @@ apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'eclipse'
 
-group = 'com.opencosmos.validators'
-version = '0.0'
+group = 'com.kuckian.validators'
+version = '1.0'
 
 description = """"""
 
