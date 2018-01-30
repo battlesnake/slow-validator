@@ -2,7 +2,9 @@ apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'eclipse'
 
-group = 'com.kuckian.validators'
+apply from: 'common-build.gradle'
+
+group = 'com.kuckian'
 version = '1.0'
 
 description = """"""
