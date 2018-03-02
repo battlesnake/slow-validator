@@ -2,8 +2,12 @@
 
 This implements a reflection-based recursive validator.
 
-It walks over all public fields of the given object.  When encountering an
+It walks over all public non-transient fields of the given object.  When encountering an
 array or another object, it recurses into them.
+
+Optionally, you can have it also try to walk over non-public fields, static
+fields, and transient fields.  This is done by method-chaining the Validator
+include\* methods.
 
 Each value is passed to a set of assertion functions, along with the context
 and the field type.
